@@ -1,5 +1,5 @@
 // Juicy Playground — Homepage — Immersive Scroll Storytelling
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
 import { ArrowRight, Leaf, ChevronRight, Sparkles, Heart, Zap, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -12,41 +12,6 @@ import {
   WordReveal, CharReveal, ParallaxLayer, ScrollReveal, CountUp,
   MagneticButton, StaggerChildren, TiltCard3D,
 } from "@/components/AnimationKit";
-
-/* ─── Floating fruit particles with deterministic layout ─── */
-function FloatingFruits() {
-  const fruits = useMemo(() => {
-    const items = ["🍓", "🥝", "🍊", "🍌", "🫐", "🍉", "🍋", "🍑"];
-    return items.map((emoji, i) => ({
-      emoji,
-      left: `${10 + (i * 12) % 85}%`,
-      top: `${5 + (i * 17) % 80}%`,
-      size: 16 + (i % 3) * 8,
-      delay: i * 0.4,
-      duration: 4 + (i % 3) * 2,
-    }));
-  }, []);
-
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden">
-      {fruits.map((f, i) => (
-        <span
-          key={i}
-          className="absolute"
-          style={{
-            left: f.left,
-            top: f.top,
-            fontSize: f.size,
-            animation: `heroFloat ${f.duration}s ease-in-out ${f.delay}s infinite`,
-            opacity: 0.6,
-          }}
-        >
-          {f.emoji}
-        </span>
-      ))}
-    </div>
-  );
-}
 
 /* ─── Marquee ticker ─── */
 function Marquee() {
@@ -132,7 +97,6 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-[#231436]/70 via-[#231436]/50 to-[#231436]/90" />
         </ParallaxLayer>
 
-        <FloatingFruits />
         <FruitWheel size={200} type="watermelon" className="absolute -bottom-12 -left-12 opacity-25 hidden lg:block" />
         <FruitWheel size={140} type="orange" className="absolute top-24 -right-10 opacity-15 hidden lg:block" />
 
@@ -247,7 +211,6 @@ export default function Home() {
       {/* ═══════════════════ BIKE SHOWCASE — Dark Immersive ═══════════════════ */}
       <BlobDivider color="#231436" />
       <section className="bg-[#231436] py-24 md:py-32 relative overflow-hidden" style={{ marginTop: "-1px" }}>
-        <FloatingFruits />
         <FruitWheel size={220} type="watermelon" className="absolute -bottom-24 -right-24 opacity-10" />
         <FruitWheel size={160} type="orange" className="absolute top-16 -left-20 opacity-8" />
 
@@ -394,7 +357,6 @@ export default function Home() {
           <img src={ASSETS.eventAction} alt="" className="w-full h-[130%] object-cover" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#231436]/90 via-[#231436]/80 to-[#231436]/60" />
         </ParallaxLayer>
-        <FloatingFruits />
         <FruitWheel size={180} type="watermelon" className="absolute -bottom-20 -left-20 opacity-15" />
 
         <div className="container relative z-10 text-center">

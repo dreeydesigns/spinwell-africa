@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import SectionReveal from "@/components/SectionReveal";
-import FloatingFruit from "@/components/FloatingFruit";
 import { FruitWheel, StickerBadge, OrgBlob } from "@/components/Decorations";
 import { BLOG_POSTS, BLOG_CATEGORIES } from "@/lib/data";
 
@@ -34,7 +33,6 @@ export default function Blog() {
 
       {/* Hero */}
       <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 bg-[#231436] overflow-hidden">
-        <FloatingFruit count={4} />
         <FruitWheel size={160} type="orange" className="absolute -bottom-12 -right-12 opacity-15 hidden lg:block" />
         <div className="container relative z-10 text-center">
           <StickerBadge color="#EC2F5D" rotate={-3} className="mb-5">Blog</StickerBadge>
