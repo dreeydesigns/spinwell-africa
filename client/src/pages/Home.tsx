@@ -18,9 +18,9 @@ function Marquee() {
   const items = ["Pedal-Powered", "Zero Electricity", "Fresh Smoothies", "Eco-Friendly", "Fun for All Ages", "Corporate Events", "Weddings", "Festivals", "Team Building", "Wellness Days", "Made in Africa"];
   return (
     <div className="overflow-hidden bg-spinwell-red py-3.5 md:py-4">
-      <div className="flex w-max whitespace-nowrap" style={{ animation: "marquee 35s linear infinite" }}>
+      <div className="flex w-max gap-3 md:gap-5 whitespace-nowrap" style={{ animation: "marquee 35s linear infinite" }}>
         {[...items, ...items].map((item, i) => (
-          <span key={i} className="shrink-0 px-5 md:px-7 text-white font-display font-semibold text-sm md:text-base inline-flex items-center gap-3">
+          <span key={i} className="shrink-0 px-6 md:px-9 text-white font-display font-semibold text-sm md:text-base inline-flex items-center gap-3">
             <span className="w-2 h-2 bg-spinwell-yellow rounded-full shrink-0" />
             {item}
           </span>

@@ -41,24 +41,25 @@ export default function PageLoader({ onComplete }: { onComplete: () => void }) {
         transition: "opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)",
       }}
     >
-      {/* Orbiting fruits */}
-      <div className="relative w-40 h-40 mb-8">
+      {/* Evenly spaced fruit ring */}
+      <div className="relative w-44 h-44 mb-8">
         {FRUITS.map((fruit, i) => {
           const angle = (360 / FRUITS.length) * i;
           const delay = i * 0.15;
           return (
             <span
               key={i}
-              className="absolute text-3xl"
+              className="absolute left-1/2 top-1/2"
               style={{
-                left: "50%",
-                top: "50%",
-                animation: `loaderOrbit 2.5s cubic-bezier(0.45, 0, 0.55, 1) ${delay}s infinite`,
-                transformOrigin: "0 0",
-                transform: `rotate(${angle}deg) translateX(60px)`,
+                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-76px)`,
               }}
             >
-              {fruit}
+              <span
+                className="block text-3xl"
+                style={{ animation: `loaderFruitFloat 1.8s ease-in-out ${delay}s infinite` }}
+              >
+                {fruit}
+              </span>
             </span>
           );
         })}
