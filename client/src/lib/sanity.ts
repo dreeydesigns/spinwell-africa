@@ -9,6 +9,15 @@ export interface SanityReview {
   rating?: number;
 }
 
+export interface GoogleReviewsPayload {
+  configured: boolean;
+  placeName?: string;
+  rating?: number;
+  userRatingCount?: number;
+  googleReviewsUrl?: string;
+  reviews: SanityReview[];
+}
+
 export interface SanityHomepage {
   heroBadge?: string;
   heroTitle?: string;
@@ -21,6 +30,13 @@ export interface SanityHomepage {
 
 export interface SanitySiteSettings {
   logo?: string;
+}
+
+export interface SanityGalleryItem {
+  title: string;
+  image: string;
+  alt: string;
+  caption?: string;
 }
 
 export const isSanityConfigured = Boolean(projectId && dataset);
@@ -52,4 +68,23 @@ export function fetchSanitySiteSettings() {
   return fetchSanity<SanitySiteSettings>(`*[_type == "siteSettings"][0]{
     "logo": logo.asset->url
   }`);
+}
+
+export function fetchSanityGalleryItems() {
+  return fetchSanity<SanityGalleryItem[]>(`*[_type == "galleryItem"] | order(order asc){
+    title,
+    "image": image.asset->url,
+    alt,
+    caption
+  }`);
+}
+
+export async function fetchGoogleReviews(): Promise<GoogleReviewsPayload | null> {
+  try {
+    const response = await fetch("/api/google-reviews");
+    if (!response.ok) return null;
+    return await response.json() as GoogleReviewsPayload;
+  } catch {
+    return null;
+  }
 }

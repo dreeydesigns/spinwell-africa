@@ -1,5 +1,6 @@
 // Juicy Playground — Homepage — Immersive Scroll Storytelling
 import { Link } from "wouter";
+import { useEffect, useState } from "react";
 import { ArrowRight, Leaf, ChevronRight, Sparkles, Star, ExternalLink, Zap, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -7,6 +8,7 @@ import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { WaveDivider, BlobDivider } from "@/components/WaveDivider";
 import { OrgBlob, FruitWheel, StickerBadge } from "@/components/Decorations";
 import { ASSETS, BIKES, BLOG_POSTS, whatsappLink } from "@/lib/data";
+import { fetchGoogleReviews, fetchSanityHomepage, type GoogleReviewsPayload, type SanityHomepage, type SanityReview } from "@/lib/sanity";
 import {
   WordReveal, CharReveal, ParallaxLayer, ScrollReveal,
   MagneticButton, StaggerChildren, TiltCard3D,
@@ -29,13 +31,25 @@ function Marquee() {
   );
 }
 
-const REVIEWS = [
-  { author: "Lilian Burns", initials: "LB", text: "We booked pedal-powered smoothies for our corporate wellness day. It was a huge hit — such a clever, fun experience for everyone.", color: "#EC2F5D" },
-  { author: "Emmaline Gad", initials: "EG", text: "Pedal Powered Smoothies was great for a hands-on, interactive experience for our staff. Booking was simple from start to finish.", color: "#3FA34D" },
-  { author: "Emily Tang", initials: "ET", text: "The concept was so interesting that I tried it for fun. The team made the whole experience easy and enjoyable.", color: "#F5871F" },
+const FALLBACK_REVIEWS: SanityReview[] = [
+  { author: "Lilian Burns", initials: "LB", text: "We booked pedal-powered smoothies for our corporate wellness day. It was a huge hit — such a clever, fun experience for everyone." },
+  { author: "Emmaline Gad", initials: "EG", text: "Pedal Powered Smoothies was great for a hands-on, interactive experience for our staff. Booking was simple from start to finish." },
+  { author: "Emily Tang", initials: "ET", text: "The concept was so interesting that I tried it for fun. The team made the whole experience easy and enjoyable." },
 ];
 
 export default function Home() {
+  const [homepage, setHomepage] = useState<SanityHomepage | null>(null);
+  const [googleReviews, setGoogleReviews] = useState<GoogleReviewsPayload | null>(null);
+
+  useEffect(() => {
+    void fetchSanityHomepage().then(setHomepage).catch(() => setHomepage(null));
+    void fetchGoogleReviews().then(setGoogleReviews);
+  }, []);
+
+  const hero = homepage ?? {};
+  const reviews = googleReviews?.reviews?.length ? googleReviews.reviews : (homepage?.reviews?.length ? homepage.reviews : FALLBACK_REVIEWS);
+  const reviewsUrl = googleReviews?.googleReviewsUrl || homepage?.googleReviewsUrl || "#reviews";
+
   return (
     <div className="min-h-screen bg-spinwell-cream overflow-x-hidden">
       <Navbar />
@@ -44,7 +58,7 @@ export default function Home() {
       <section className="relative min-h-[100vh] flex items-center overflow-hidden bg-[#231436]">
         {/* Parallax background */}
         <ParallaxLayer speed={0.15} className="absolute inset-0">
-          <img src={ASSETS.heroBg} alt="" className="w-full h-[130%] object-cover opacity-30" />
+          <img src={hero.heroBackground || ASSETS.heroBg} alt="" className="w-full h-[130%] object-cover opacity-30" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#231436]/70 via-[#231436]/50 to-[#231436]/90" />
         </ParallaxLayer>
 
@@ -58,13 +72,13 @@ export default function Home() {
               <ScrollReveal variant="fadeRight" delay={300}>
                 <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-5 py-2.5 mb-8 border border-white/10">
                   <Leaf className="w-4 h-4 text-spinwell-green" />
-                  <span className="text-white/90 text-sm font-medium tracking-wide">Zero electricity. Pure leg power.</span>
+                  <span className="text-white/90 text-sm font-medium tracking-wide">{hero.heroBadge || "Zero electricity. Pure leg power."}</span>
                 </div>
               </ScrollReveal>
 
               {/* Word reveal headline */}
               <WordReveal
-                text="Spin the Fun Loose."
+                text={hero.heroTitle || "Spin the Fun Loose."}
                 className="font-display font-bold text-white leading-[1.05] mb-4"
                 tag="h1"
                 delay={500}
@@ -73,7 +87,7 @@ export default function Home() {
               {/* Char reveal tagline */}
               <div className="mb-8">
                 <CharReveal
-                  text="Pedal. Blend. Sip. Repeat."
+                  text={hero.heroTagline || "Pedal. Blend. Sip. Repeat."}
                   className="font-display text-spinwell-yellow text-xl md:text-2xl font-semibold"
                   delay={1200}
                   stagger={40}
@@ -83,7 +97,7 @@ export default function Home() {
               {/* Description with fade */}
               <ScrollReveal variant="fadeUp" delay={1600}>
                 <p className="text-white/75 text-lg md:text-xl leading-relaxed mb-10 max-w-lg">
-                  Pedal-powered smoothie bikes, bubble bikes, and spin art bikes that turn any event into an unforgettable experience. Hire, lease, or buy across Kenya.
+                  {hero.heroDescription || "Pedal-powered smoothie bikes, bubble bikes, and spin art bikes that turn any event into an unforgettable experience. Hire, lease, or buy across Kenya."}
                 </p>
               </ScrollReveal>
 
@@ -236,17 +250,17 @@ export default function Home() {
           </ScrollReveal>
 
           <StaggerChildren stagger={150} className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto" variant="slideUp">
-            {REVIEWS.map((review) => (
+            {reviews.map((review, index) => (
               <article key={review.author} className="bg-white rounded-3xl border border-[#231436]/10 p-7 shadow-sm flex flex-col min-h-72">
                 <div className="flex items-center justify-between mb-6">
-                  <div className="flex gap-1 text-[#F5871F]" aria-label="5 out of 5 stars">
-                    {Array.from({ length: 5 }, (_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+                  <div className="flex gap-1 text-[#F5871F]" aria-label={`${review.rating || 5} out of 5 stars`}>
+                    {Array.from({ length: 5 }, (_, i) => <Star key={i} className={`w-4 h-4 ${i < Math.round(review.rating || 5) ? "fill-current" : ""}`} />)}
                   </div>
                   <span className="text-xs font-semibold text-[#231436]/50">Google</span>
                 </div>
                 <p className="text-[#231436]/80 text-base leading-relaxed flex-1">“{review.text}”</p>
                 <div className="mt-7 pt-5 border-t border-[#231436]/10 flex items-center gap-3">
-                  <span className="w-11 h-11 rounded-full inline-flex items-center justify-center font-bold" style={{ color: review.color, backgroundColor: `${review.color}18` }}>{review.initials}</span>
+                  <span className="w-11 h-11 rounded-full inline-flex items-center justify-center font-bold" style={{ color: ["#EC2F5D", "#3FA34D", "#F5871F"][index % 3], backgroundColor: `${["#EC2F5D", "#3FA34D", "#F5871F"][index % 3]}18` }}>{review.initials || review.author.split(/\s+/).map((part) => part[0]).join("").slice(0, 2)}</span>
                   <span className="font-semibold text-[#231436]">{review.author}</span>
                 </div>
               </article>
@@ -254,7 +268,7 @@ export default function Home() {
           </StaggerChildren>
 
           <ScrollReveal variant="fadeUp" delay={350} className="text-center mt-10">
-            <a href="#reviews" className="inline-flex items-center gap-2 rounded-full border border-[#231436]/10 bg-white px-6 py-3 font-semibold text-[#231436] hover:bg-[#231436] hover:text-white transition-colors">
+            <a href={reviewsUrl} target={reviewsUrl.startsWith("http") ? "_blank" : undefined} rel={reviewsUrl.startsWith("http") ? "noopener noreferrer" : undefined} className="inline-flex items-center gap-2 rounded-full border border-[#231436]/10 bg-white px-6 py-3 font-semibold text-[#231436] hover:bg-[#231436] hover:text-white transition-colors">
               Read more reviews on Google <ExternalLink className="w-4 h-4" />
             </a>
           </ScrollReveal>

@@ -1,11 +1,12 @@
 // Gallery — Immersive animations
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { FruitWheel, StickerBadge } from "@/components/Decorations";
 import { ASSETS, whatsappLink } from "@/lib/data";
+import { fetchSanityGalleryItems, type SanityGalleryItem } from "@/lib/sanity";
 import { WordReveal, ScrollReveal, StaggerChildren, MagneticButton } from "@/components/AnimationKit";
 
 const GALLERY_IMAGES = [
@@ -22,9 +23,21 @@ const GALLERY_IMAGES = [
 
 export default function Gallery() {
   const [lightbox, setLightbox] = useState<number | null>(null);
+  const [cmsImages, setCmsImages] = useState<SanityGalleryItem[] | null>(null);
 
-  const goNext = () => { if (lightbox !== null) setLightbox((lightbox + 1) % GALLERY_IMAGES.length); };
-  const goPrev = () => { if (lightbox !== null) setLightbox((lightbox - 1 + GALLERY_IMAGES.length) % GALLERY_IMAGES.length); };
+  useEffect(() => {
+    void fetchSanityGalleryItems().then((items) => setCmsImages(items?.length ? items : null)).catch(() => setCmsImages(null));
+  }, []);
+
+  const galleryImages = cmsImages?.map((item) => ({
+    src: item.image,
+    alt: item.alt,
+    caption: item.caption || item.title,
+    color: "#EC2F5D",
+  })) ?? GALLERY_IMAGES;
+
+  const goNext = () => { if (lightbox !== null) setLightbox((lightbox + 1) % galleryImages.length); };
+  const goPrev = () => { if (lightbox !== null) setLightbox((lightbox - 1 + galleryImages.length) % galleryImages.length); };
 
   return (
     <div className="min-h-screen bg-spinwell-cream overflow-x-hidden">
@@ -50,7 +63,7 @@ export default function Gallery() {
       <section className="py-16 md:py-24 bg-spinwell-cream">
         <div className="container">
           <StaggerChildren stagger={80} className="columns-1 sm:columns-2 lg:columns-3 gap-5 [&>*]:mb-5" variant="scaleUp">
-            {GALLERY_IMAGES.map((img, i) => (
+            {galleryImages.map((img, i) => (
               <div
                 key={i}
                 className="break-inside-avoid rounded-3xl overflow-hidden group cursor-pointer relative border-4 shadow-md hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
@@ -88,8 +101,8 @@ export default function Gallery() {
           <button onClick={() => setLightbox(null)} className="absolute top-6 right-6 text-white/80 hover:text-white transition-colors z-10" aria-label="Close"><X className="w-8 h-8" /></button>
           <button onClick={(e) => { e.stopPropagation(); goPrev(); }} className="absolute left-4 md:left-8 text-white/60 hover:text-white transition-colors z-10" aria-label="Previous"><ChevronLeft className="w-10 h-10" /></button>
           <button onClick={(e) => { e.stopPropagation(); goNext(); }} className="absolute right-4 md:right-8 text-white/60 hover:text-white transition-colors z-10" aria-label="Next"><ChevronRight className="w-10 h-10" /></button>
-          <img src={GALLERY_IMAGES[lightbox].src} alt={GALLERY_IMAGES[lightbox].alt} className="max-w-full max-h-[85vh] object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
-          <div className="absolute bottom-8 text-center text-white/80 text-sm">{GALLERY_IMAGES[lightbox].caption} &middot; {lightbox + 1} / {GALLERY_IMAGES.length}</div>
+          <img src={galleryImages[lightbox].src} alt={galleryImages[lightbox].alt} className="max-w-full max-h-[85vh] object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
+          <div className="absolute bottom-8 text-center text-white/80 text-sm">{galleryImages[lightbox].caption} &middot; {lightbox + 1} / {galleryImages.length}</div>
         </div>
       )}
 

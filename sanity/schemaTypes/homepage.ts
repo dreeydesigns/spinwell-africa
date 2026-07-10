@@ -9,11 +9,12 @@ export const homepage = defineType({
     defineField({ name: "heroTitle", title: "Hero title", type: "string", validation: (Rule) => Rule.required() }),
     defineField({ name: "heroTagline", title: "Hero tagline", type: "string", validation: (Rule) => Rule.required() }),
     defineField({ name: "heroDescription", title: "Hero description", type: "text", rows: 3, validation: (Rule) => Rule.required() }),
-    defineField({ name: "heroBackground", title: "Hero background", type: "image", options: { hotspot: true } }),
-    defineField({ name: "googleReviewsUrl", title: "Google Reviews URL", type: "url", validation: (Rule) => Rule.uri({ scheme: ["https"] }) }),
+    defineField({ name: "heroBackground", title: "Hero background", type: "image", options: { hotspot: true }, description: "Upload the main homepage image. The hotspot controls its focal point on smaller screens." }),
+    defineField({ name: "googleReviewsUrl", title: "Google Reviews URL (fallback)", type: "url", description: "Used when the live Google Places integration is not configured.", validation: (Rule) => Rule.uri({ scheme: ["https"] }) }),
     defineField({
       name: "reviews",
-      title: "Google review cards",
+      title: "Review cards (fallback)",
+      description: "Shown until the server-side Google Places integration is configured, or if Google is temporarily unavailable.",
       type: "array",
       validation: (Rule) => Rule.max(6),
       of: [defineArrayMember({
