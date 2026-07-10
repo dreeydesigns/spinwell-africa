@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { WaveDivider, BlobDivider } from "@/components/WaveDivider";
 import { OrgBlob, FruitWheel, StickerBadge } from "@/components/Decorations";
-import { ASSETS, BIKES, BLOG_POSTS, STATS, HOW_IT_WORKS, whatsappLink } from "@/lib/data";
+import { ASSETS, BIKES, BLOG_POSTS, STATS, whatsappLink } from "@/lib/data";
 import {
   WordReveal, CharReveal, ParallaxLayer, ScrollReveal, CountUp,
   MagneticButton, StaggerChildren, TiltCard3D,
@@ -18,9 +18,9 @@ function Marquee() {
   const items = ["Pedal-Powered", "Zero Electricity", "Fresh Smoothies", "Eco-Friendly", "Fun for All Ages", "Corporate Events", "Weddings", "Festivals", "Team Building", "Wellness Days", "Made in Africa"];
   return (
     <div className="overflow-hidden bg-spinwell-red py-3.5 md:py-4">
-      <div className="flex whitespace-nowrap" style={{ animation: "marquee 35s linear infinite" }}>
+      <div className="flex w-max whitespace-nowrap" style={{ animation: "marquee 35s linear infinite" }}>
         {[...items, ...items].map((item, i) => (
-          <span key={i} className="mx-6 md:mx-8 text-white font-display font-semibold text-sm md:text-base flex items-center gap-3">
+          <span key={i} className="shrink-0 px-5 md:px-7 text-white font-display font-semibold text-sm md:text-base inline-flex items-center gap-3">
             <span className="w-2 h-2 bg-spinwell-yellow rounded-full shrink-0" />
             {item}
           </span>
@@ -170,40 +170,41 @@ export default function Home() {
 
       <Marquee />
 
-      {/* ═══════════════════ HOW IT WORKS ═══════════════════ */}
+      {/* ═══════════════════ SERVICES — Hire / Lease / Buy ═══════════════════ */}
       <section className="py-24 md:py-32 bg-spinwell-cream relative overflow-hidden">
-        <OrgBlob color="#3FA34D" opacity={0.06} className="w-[500px] h-[500px] -top-40 -right-40" />
-        <OrgBlob color="#F5871F" opacity={0.05} className="w-[400px] h-[400px] -bottom-32 -left-32" />
+        <OrgBlob color="#FFC93C" opacity={0.08} className="w-[450px] h-[450px] -top-32 -left-40" />
+        <OrgBlob color="#2FA8E0" opacity={0.06} className="w-[350px] h-[350px] -bottom-24 -right-24" />
 
         <div className="container relative z-10">
-          <ScrollReveal variant="blurIn" className="text-center mb-20">
-            <StickerBadge color="#3FA34D" rotate={-2} className="mb-5">How It Works</StickerBadge>
-            <WordReveal
-              text="Three Steps to Smoothie Heaven"
-              tag="h2"
-              className="font-display font-bold text-[#231436] mb-5"
-            />
+          <ScrollReveal variant="blurIn" className="text-center mb-16">
+            <StickerBadge color="#F5871F" rotate={2} className="mb-5">Our Services</StickerBadge>
+            <WordReveal text="Hire. Lease. Buy." tag="h2" className="font-display font-bold text-[#231436] mb-5" />
             <p className="text-[#231436]/60 text-lg max-w-2xl mx-auto">
-              No electricity. No complicated setup. Just hop on and pedal.
+              Whether you need bikes for a day, a month, or forever — we've got a plan that fits.
             </p>
           </ScrollReveal>
 
-          <StaggerChildren stagger={200} className="grid md:grid-cols-3 gap-8 md:gap-12" variant="slideUp">
-            {HOW_IT_WORKS.map((step, i) => {
-              const bgColors = ["bg-[#EC2F5D08]", "bg-[#F5871F08]", "bg-[#3FA34D08]"];
-              const borderColors = ["border-[#EC2F5D20]", "border-[#F5871F20]", "border-[#3FA34D20]"];
-              const accentColors = ["#EC2F5D", "#F5871F", "#3FA34D"];
-              return (
-                <TiltCard3D key={step.step} className={`rounded-3xl p-10 text-center border-2 ${bgColors[i]} ${borderColors[i]}`}>
-                  <div className="text-6xl mb-6" style={{ animation: `wiggle 2s ease-in-out ${i * 0.3}s infinite` }}>{step.icon}</div>
-                  <div className="inline-flex items-center justify-center w-12 h-12 rounded-full text-white font-display font-bold text-xl mb-5" style={{ backgroundColor: accentColors[i] }}>
-                    {step.step}
-                  </div>
-                  <h3 className="font-display font-semibold text-xl text-[#231436] mb-3">{step.title}</h3>
-                  <p className="text-[#231436]/60 text-sm leading-relaxed">{step.description}</p>
-                </TiltCard3D>
-              );
-            })}
+          <StaggerChildren stagger={200} className="grid md:grid-cols-3 gap-6" variant="rotateIn">
+            {[
+              { title: "Hire for a Day", desc: "Perfect for events. We deliver, set up, and collect. You just enjoy the fun.", color: "#EC2F5D", icon: <Zap className="w-7 h-7" />, href: "/hire", cta: "Let's Party" },
+              { title: "Lease Monthly", desc: "Ideal for businesses. Juice bars, hotels, gyms — keep the bikes as long as you need.", color: "#F5871F", icon: <Users className="w-7 h-7" />, href: "/lease", cta: "Start Spinning" },
+              { title: "Buy Outright", desc: "Own your fleet. Adult and kids bikes available with full accessories included.", color: "#3FA34D", icon: <Leaf className="w-7 h-7" />, href: "/buy", cta: "Own a Bike" },
+            ].map((service) => (
+              <TiltCard3D
+                key={service.title}
+                className="rounded-3xl p-8 hover:shadow-xl transition-shadow h-full flex flex-col border-2"
+                style={{ backgroundColor: `${service.color}08`, borderColor: `${service.color}20` }}
+              >
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg" style={{ backgroundColor: service.color, boxShadow: `0 8px 25px ${service.color}40` }}>
+                  {service.icon}
+                </div>
+                <h3 className="font-display font-semibold text-xl text-[#231436] mb-3">{service.title}</h3>
+                <p className="text-[#231436]/60 text-sm leading-relaxed mb-6 flex-1">{service.desc}</p>
+                <Link href={service.href} className="inline-flex items-center gap-2 font-semibold text-sm hover:gap-3 transition-all duration-300" style={{ color: service.color }}>
+                  {service.cta} <ArrowRight className="w-4 h-4" />
+                </Link>
+              </TiltCard3D>
+            ))}
           </StaggerChildren>
         </div>
       </section>
@@ -309,45 +310,6 @@ export default function Home() {
               </ScrollReveal>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ SERVICES — Hire / Lease / Buy ═══════════════════ */}
-      <section className="py-24 md:py-32 bg-spinwell-cream relative overflow-hidden">
-        <OrgBlob color="#FFC93C" opacity={0.08} className="w-[450px] h-[450px] -top-32 -left-40" />
-        <OrgBlob color="#2FA8E0" opacity={0.06} className="w-[350px] h-[350px] -bottom-24 -right-24" />
-
-        <div className="container relative z-10">
-          <ScrollReveal variant="blurIn" className="text-center mb-16">
-            <StickerBadge color="#F5871F" rotate={2} className="mb-5">Our Services</StickerBadge>
-            <WordReveal text="Hire. Lease. Buy." tag="h2" className="font-display font-bold text-[#231436] mb-5" />
-            <p className="text-[#231436]/60 text-lg max-w-2xl mx-auto">
-              Whether you need bikes for a day, a month, or forever — we've got a plan that fits.
-            </p>
-          </ScrollReveal>
-
-          <StaggerChildren stagger={200} className="grid md:grid-cols-3 gap-6" variant="rotateIn">
-            {[
-              { title: "Hire for a Day", desc: "Perfect for events. We deliver, set up, and collect. You just enjoy the fun.", color: "#EC2F5D", icon: <Zap className="w-7 h-7" />, href: "/hire", cta: "Let's Party" },
-              { title: "Lease Monthly", desc: "Ideal for businesses. Juice bars, hotels, gyms — keep the bikes as long as you need.", color: "#F5871F", icon: <Users className="w-7 h-7" />, href: "/lease", cta: "Start Spinning" },
-              { title: "Buy Outright", desc: "Own your fleet. Adult and kids bikes available with full accessories included.", color: "#3FA34D", icon: <Leaf className="w-7 h-7" />, href: "/buy", cta: "Own a Bike" },
-            ].map((service) => (
-              <TiltCard3D
-                key={service.title}
-                className="rounded-3xl p-8 hover:shadow-xl transition-shadow h-full flex flex-col border-2"
-                style={{ backgroundColor: `${service.color}08`, borderColor: `${service.color}20` }}
-              >
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg" style={{ backgroundColor: service.color, boxShadow: `0 8px 25px ${service.color}40` }}>
-                  {service.icon}
-                </div>
-                <h3 className="font-display font-semibold text-xl text-[#231436] mb-3">{service.title}</h3>
-                <p className="text-[#231436]/60 text-sm leading-relaxed mb-6 flex-1">{service.desc}</p>
-                <Link href={service.href} className="inline-flex items-center gap-2 font-semibold text-sm hover:gap-3 transition-all duration-300" style={{ color: service.color }}>
-                  {service.cta} <ArrowRight className="w-4 h-4" />
-                </Link>
-              </TiltCard3D>
-            ))}
-          </StaggerChildren>
         </div>
       </section>
 
