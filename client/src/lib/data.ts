@@ -16,16 +16,16 @@ export const SOCIAL_LINKS = {
 
 // Asset URLs
 export const ASSETS = {
-  smoothieSplash: "/manus-storage/smoothie_19bc91af.webp",
-  whiteBike: "/images/white_bike_847d1bae.webp",
-  bikeLineup: "/images/lineup_ef9b066a.webp",
+  smoothieSplash: "/images/smoothie_19bc91af.webp",
+  whiteBike: "/images/white_bike_847d1bae.png",
+  bikeLineup: "/images/lineup_ef9b066a.png",
   girlRiding: "/images/girl_riding_29c700ac.webp",
   heroBg: "/images/spinwell-hero-bg_ddc71885.webp",
-  bikesShowcase: "/manus-storage/spinwell-bikes-showcase_db22c45c.png",
+  bikesShowcase: "/images/spinwell-bikes-showcase_db22c45c.webp",
   eventAction: "/images/spinwell-event-action_6669059f.webp",
   aboutHero: "/images/spinwell-about-hero_28d27f13.webp",
-  logoIcon: "/images/spinwell-logo-icon_50cf169c.webp",
-  orangeBikeEvent: "/images/DSC_3195_cdc3d9c9.webp",
+  logoIcon: "/images/spinwell-logo-icon_50cf169c.png",
+  orangeBikeEvent: "/images/DSC_3195_cdc3d9c9.png",
   blueBikeBanner: "/images/DSC_1899_04ea48b7.webp",
   familyAction: "/images/fxphotography-214_435e5e9a.webp",
   logoColour: "/manus-storage/logo-extract-2_88a64ffa.png",

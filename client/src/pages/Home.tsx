@@ -1,15 +1,14 @@
 // Juicy Playground — Homepage — Immersive Scroll Storytelling
-import { useState, useEffect, useRef } from "react";
 import { Link } from "wouter";
-import { ArrowRight, Leaf, ChevronRight, Sparkles, Heart, Zap, Users } from "lucide-react";
+import { ArrowRight, Leaf, ChevronRight, Sparkles, Star, ExternalLink, Zap, Users } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppFloat from "@/components/WhatsAppFloat";
 import { WaveDivider, BlobDivider } from "@/components/WaveDivider";
 import { OrgBlob, FruitWheel, StickerBadge } from "@/components/Decorations";
-import { ASSETS, BIKES, BLOG_POSTS, STATS, whatsappLink } from "@/lib/data";
+import { ASSETS, BIKES, BLOG_POSTS, whatsappLink } from "@/lib/data";
 import {
-  WordReveal, CharReveal, ParallaxLayer, ScrollReveal, CountUp,
+  WordReveal, CharReveal, ParallaxLayer, ScrollReveal,
   MagneticButton, StaggerChildren, TiltCard3D,
 } from "@/components/AnimationKit";
 
@@ -30,59 +29,11 @@ function Marquee() {
   );
 }
 
-/* ─── Scroll-linked hero image ─── */
-function HeroImage() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    let ticking = false;
-    const onScroll = () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(() => {
-          setScrollY(window.scrollY);
-          ticking = false;
-        });
-      }
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  return (
-    <div ref={ref} className="relative hidden lg:block">
-      {/* Glow behind bike */}
-      <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] aspect-square rounded-full"
-        style={{
-          background: "radial-gradient(circle, rgba(236,47,93,0.25) 0%, rgba(245,135,31,0.15) 40%, transparent 70%)",
-          transform: `translate(-50%, -50%) scale(${1 + scrollY * 0.0003})`,
-        }}
-      />
-      {/* Main bike image */}
-      <img
-        src={ASSETS.girlRiding}
-        alt="Woman riding a Spinwell smoothie bike"
-        className="w-full max-w-lg mx-auto relative z-10 drop-shadow-2xl"
-        style={{
-          animation: "heroFloat 6s ease-in-out infinite",
-          transform: `translateY(${scrollY * -0.15}px) rotate(${scrollY * 0.01}deg)`,
-        }}
-      />
-      {/* Floating smoothie splash */}
-      <img
-        src={ASSETS.smoothieSplash}
-        alt=""
-        className="absolute -top-8 -right-12 w-32 z-20 drop-shadow-lg"
-        style={{
-          animation: "heroFloat 5s ease-in-out 0.5s infinite",
-          transform: `translateY(${scrollY * -0.25}px)`,
-        }}
-      />
-    </div>
-  );
-}
+const REVIEWS = [
+  { author: "Lilian Burns", initials: "LB", text: "We booked pedal-powered smoothies for our corporate wellness day. It was a huge hit — such a clever, fun experience for everyone.", color: "#EC2F5D" },
+  { author: "Emmaline Gad", initials: "EG", text: "Pedal Powered Smoothies was great for a hands-on, interactive experience for our staff. Booking was simple from start to finish.", color: "#3FA34D" },
+  { author: "Emily Tang", initials: "ET", text: "The concept was so interesting that I tried it for fun. The team made the whole experience easy and enjoyable.", color: "#F5871F" },
+];
 
 export default function Home() {
   return (
@@ -101,7 +52,7 @@ export default function Home() {
         <FruitWheel size={140} type="orange" className="absolute top-24 -right-10 opacity-15 hidden lg:block" />
 
         <div className="container relative z-10 pt-28 pb-20 md:pt-36 md:pb-28">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="max-w-2xl">
             <div>
               {/* Pill badge */}
               <ScrollReveal variant="fadeRight" delay={300}>
@@ -132,7 +83,7 @@ export default function Home() {
               {/* Description with fade */}
               <ScrollReveal variant="fadeUp" delay={1600}>
                 <p className="text-white/75 text-lg md:text-xl leading-relaxed mb-10 max-w-lg">
-                  Pedal-powered smoothie bikes, bubble bikes, and spin art bikes that turn any event into an unforgettable experience. Hire, lease, or buy across Africa.
+                  Pedal-powered smoothie bikes, bubble bikes, and spin art bikes that turn any event into an unforgettable experience. Hire, lease, or buy across Kenya.
                 </p>
               </ScrollReveal>
 
@@ -155,7 +106,6 @@ export default function Home() {
               </ScrollReveal>
             </div>
 
-            <HeroImage />
           </div>
         </div>
 
@@ -272,25 +222,42 @@ export default function Home() {
       </section>
       <WaveDivider color="#FFF9F0" position="top" />
 
-      {/* ═══════════════════ STATS — Animated Counters ═══════════════════ */}
-      <section className="py-20 md:py-24 bg-[#FFF9F0] relative overflow-hidden" style={{ marginTop: "-1px" }}>
+      {/* ═══════════════════ GOOGLE REVIEWS ═══════════════════ */}
+      <section className="py-20 md:py-28 bg-[#FFF9F0] relative overflow-hidden" style={{ marginTop: "-1px" }}>
         <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #231436 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
         <div className="container relative z-10">
-          <StaggerChildren stagger={150} className="grid grid-cols-2 md:grid-cols-4 gap-8" variant="scaleUp">
-            {STATS.map((stat, i) => {
-              const colors = ["#EC2F5D", "#F5871F", "#3FA34D", "#2FA8E0"];
-              const numericValue = parseInt(stat.value.replace(/[^0-9]/g, ""));
-              const suffix = stat.value.replace(/[0-9,]/g, "");
-              return (
-                <div key={stat.label} className="text-center">
-                  <div className="font-display font-bold mb-2" style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", color: colors[i], animation: `textGlow 3s ease-in-out ${i * 0.5}s infinite` }}>
-                    <CountUp end={numericValue} suffix={suffix} duration={2500} />
+          <ScrollReveal variant="blurIn" className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 text-sm font-bold tracking-[0.16em] uppercase text-[#231436]/70 mb-4">
+              <span className="font-sans text-lg font-bold text-[#4285F4]">G</span> Google Reviews
+            </div>
+            <WordReveal text="What Our Pedallers Say" tag="h2" className="font-display font-bold text-[#231436] mb-4" />
+            <p className="text-[#231436]/65 text-lg leading-relaxed">Don’t just take our word for it — hear from the riders who’ve blended, pedalled, and powered their way to the perfect smoothie.</p>
+            <p className="mt-3 text-[#231436]/80 font-medium">Rated <strong className="text-[#231436]">5.0 stars</strong> by our amazing community.</p>
+          </ScrollReveal>
+
+          <StaggerChildren stagger={150} className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto" variant="slideUp">
+            {REVIEWS.map((review) => (
+              <article key={review.author} className="bg-white rounded-3xl border border-[#231436]/10 p-7 shadow-sm flex flex-col min-h-72">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex gap-1 text-[#F5871F]" aria-label="5 out of 5 stars">
+                    {Array.from({ length: 5 }, (_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
                   </div>
-                  <div className="text-[#231436]/50 text-sm font-medium tracking-wide">{stat.label}</div>
+                  <span className="text-xs font-semibold text-[#231436]/50">Google</span>
                 </div>
-              );
-            })}
+                <p className="text-[#231436]/80 text-base leading-relaxed flex-1">“{review.text}”</p>
+                <div className="mt-7 pt-5 border-t border-[#231436]/10 flex items-center gap-3">
+                  <span className="w-11 h-11 rounded-full inline-flex items-center justify-center font-bold" style={{ color: review.color, backgroundColor: `${review.color}18` }}>{review.initials}</span>
+                  <span className="font-semibold text-[#231436]">{review.author}</span>
+                </div>
+              </article>
+            ))}
           </StaggerChildren>
+
+          <ScrollReveal variant="fadeUp" delay={350} className="text-center mt-10">
+            <a href="#reviews" className="inline-flex items-center gap-2 rounded-full border border-[#231436]/10 bg-white px-6 py-3 font-semibold text-[#231436] hover:bg-[#231436] hover:text-white transition-colors">
+              Read more reviews on Google <ExternalLink className="w-4 h-4" />
+            </a>
+          </ScrollReveal>
         </div>
       </section>
 

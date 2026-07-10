@@ -1,8 +1,6 @@
 // Cinematic page loader — fruit-themed with progress bar and staggered exit
 import { useState, useEffect } from "react";
 
-const FRUITS = ["🍓", "🥝", "🍊", "🍌", "🫐", "🍉"];
-
 export default function PageLoader({ onComplete }: { onComplete: () => void }) {
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<"loading" | "exit">("loading");
@@ -41,29 +39,8 @@ export default function PageLoader({ onComplete }: { onComplete: () => void }) {
         transition: "opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1), transform 0.8s cubic-bezier(0.23, 1, 0.32, 1)",
       }}
     >
-      {/* Evenly spaced fruit ring */}
-      <div className="relative w-44 h-44 mb-8">
-        {FRUITS.map((fruit, i) => {
-          const angle = (360 / FRUITS.length) * i;
-          const delay = i * 0.15;
-          return (
-            <span
-              key={i}
-              className="absolute left-1/2 top-1/2"
-              style={{
-                transform: `translate(-50%, -50%) rotate(${angle}deg) translateY(-76px)`,
-              }}
-            >
-              <span
-                className="block text-3xl"
-                style={{ animation: `loaderFruitFloat 1.8s ease-in-out ${delay}s infinite` }}
-              >
-                {fruit}
-              </span>
-            </span>
-          );
-        })}
-        {/* Center logo */}
+      <div className="relative w-28 h-28 mb-8">
+        {/* Bike only */}
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{
